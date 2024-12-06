@@ -1,7 +1,6 @@
 import streamlit as st
 import mysql.connector
 from datetime import datetime
-import pyautogui
 import pandas as pd
 
 #criando um menu lateral
@@ -105,9 +104,9 @@ with tabs[1]:
 
     # Botão de envio com verificação de duplicidade
     if st.button("Enviar", key="enviar", help="Clique para enviar os dados",icon="📨"):
-      pyautogui.press('F5')
+            
         # Garantir que todos os campos obrigatórios estejam preenchidos
-    if all([
+        if all([
             data,
             pedido.strip(),
             cliente_nome.strip(),
