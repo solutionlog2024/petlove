@@ -3,12 +3,13 @@ import mysql.connector
 from datetime import datetime
 import pandas as pd
 
-#criando um menu lateral
+# Criando um menu lateral
 st.set_page_config(layout="wide")
-st.sidebar.image('logo1.png',width=200)
-st.sidebar.image('petlove.png',width=100)
+st.sidebar.image('logo1.png', width=200)
+st.sidebar.image('petlove.png', width=100)
 st.sidebar.text("Solution Logística - Maceió/Al")
 st.sidebar.text('Endereço: R. João Monteiro da Silva, 1600 - Tabuleiro do Martins, Maceió - AL, 57081-780')
+
 
 # Configuração de conexão com o banco de dados
 def connect_to_database():
@@ -60,7 +61,7 @@ create_table()
 st.header("Solution Logística - Controle e Registro Logístico", anchor="header")
 
 # Criando abas
-tabs = st.tabs(["Página inicial", "Registro Expedição", "Power Bi", "Contato","Tabela de Pedidos"])
+tabs = st.tabs(["Página inicial", "Registro Expedição", "Power BI", "Contato", "Tabela de Pedidos"])
 
 # Conteúdo da aba "Página inicial"
 with tabs[0]:
@@ -73,16 +74,14 @@ with tabs[0]:
         Buscar novas oportunidades, ampliar nossos horizontes e abrir novos caminhos está em nossa razão de ser. 
         Começamos a contar a nossa história em 2009, com um olhar para o futuro, focado no presente.
     """)
-    col1=st.image('sol1.png', caption="Conheça nossas Soluções")
-    col2=st.image('sol2.png', caption="Nossa Razão de existir")
-    st.text("2024 - Aplicação desenvolvida por: Williams Rodrigues - Analista de Dados e Logística")
-    st.text("Tel.: (82) 98863-9394") 
-    col1,col2=st.columns(2)
+    col1, col2 = st.columns(2)
     with col1:
         st.image('sol1.png', caption="Conheça nossas Soluções")
-    with col2:  
+    with col2:
         st.image('sol2.png', caption="Nossa Razão de existir")
-
+    st.text("2024 - Aplicação desenvolvida por: Williams Rodrigues - Analista de Dados e Logística")
+    st.text("Tel.: (82) 98863-9394")
+    st.text("Versão:1.0.0")
 
 # Conteúdo da aba "Registro Expedição"
 with tabs[1]:
@@ -103,7 +102,7 @@ with tabs[1]:
     quantidade = st.text_input("Quantidade", key="quantidade")
 
     # Botão de envio com verificação de duplicidade
-    if st.button("Enviar", key="enviar", help="Clique para enviar os dados",icon="📨"):
+    if st.button("Enviar", key="enviar", help="Clique para enviar os dados", icon="📨"):
             
         # Garantir que todos os campos obrigatórios estejam preenchidos
         if all([
@@ -151,7 +150,8 @@ with tabs[1]:
                     conn.close()
     else:
             st.warning("Por favor, preencha todos os campos obrigatórios!")
-        
+
+# Conteúdo da aba "Power BI"
 with tabs[2]:
     st.header("Acompanhe a operação em tempo real")
     
@@ -160,7 +160,6 @@ with tabs[2]:
     
     # Incorporar o iframe do Power BI com a resolução 1080x1920
     st.components.v1.iframe(src=url, width=1100, height=600)
-    
 
 # Conteúdo da aba "Contato"
 with tabs[3]:
@@ -171,7 +170,7 @@ with tabs[3]:
         📧 **Email:** logistica4.mcz@solution-log.com
     """)
 
-
+# Conteúdo da aba "Tabela de Pedidos Expedidos"
 with tabs[4]:
     st.header("Tabela de Pedidos Expedidos")
 
@@ -199,6 +198,20 @@ with tabs[4]:
 
             # Exibir o DataFrame
             st.dataframe(df_filtrado)
+
+            # Campo para deletar registros
+            filtro_deletar = st.text_input("Deletar Pedido (Digite o Nº Pedido a ser deletado)", key="filtro_deletar")
+            if filtro_deletar:
+                try:
+                    cursor = conn.cursor()
+                    delete_query = "DELETE FROM expedição_petlove WHERE numero_pedido = %s"
+                    cursor.execute(delete_query, (filtro_deletar,))
+                    conn.commit()
+                    st.success(f"Registro com Nº Pedido {filtro_deletar} deletado com sucesso!")
+                except mysql.connector.Error as err:
+                    st.error(f"Erro ao deletar registro: {err}")
+                finally:
+                    cursor.close()
         else:
             st.warning("Nenhum registro encontrado no banco de dados!")
 
@@ -210,12 +223,6 @@ with tabs[4]:
         if conn.is_connected():
             conn.close()
 
-#total de registros no dataframe
-    total_registros = len(df_filtrado)
+    # Total de registros no dataframe
+    total_registros = len(df_filtrado) if 'df_filtrado' in locals() else 0
     st.write(f"Total de registros: {total_registros}")
-
-
-
-
-#----------------
-
