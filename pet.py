@@ -98,7 +98,7 @@ with tabs[1]:
     cidade = st.text_input("Cidade", key="cidade")
     uf = st.text_input("UF", key="uf")
     rota = st.text_input("Rota", key="rota")
-    tipo_expedicao = st.selectbox("Tipo de Expedição", ["SELECIONE UM TIPO", "BONIFICAÇÃO", "VENDA NORMAL","AMOSTRA"], key="tipo_expedicao")
+    tipo_expedicao = st.selectbox("Tipo de Expedição", ["SELECIONE UM TIPO", "BONIFICAÇÃO", "VENDA NORMAL","AMOSTRA","BRINDES"], key="tipo_expedicao")
     quantidade = st.text_input("Quantidade", key="quantidade")
 
     # Botão de envio com verificação de duplicidade
